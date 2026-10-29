@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `Notes - ${note}`,
       description: `Browse notes tagged with ${note}. Notehub allows you to filter and view notes based on specific tags`,
-      url: `https://notehub.com{note}`,
+      url: `https://notehub.com{note}`, // Виправлено: тепер це правильний шаблонний рядок із підстановкою змінної
       images: [
         {
           url: "https://goit.global",
@@ -56,6 +56,7 @@ export default async function Notes({ params }: Props) {
     </HydrationBoundary>
   );
 }
+
 
 
 

@@ -1,7 +1,13 @@
+
 import { cookies } from "next/headers";
 import { api } from "@/app/api/api";
 import type { Note } from "@/types/note";
 import type { User } from "@/types/user";
+
+export interface ApiResponse {
+  notes: Note[];
+  totalPages: number;
+}
 
 async function getAuthHeaders() {
   const cookieStore = await cookies();
@@ -11,9 +17,13 @@ async function getAuthHeaders() {
   return cookieString ? { Cookie: cookieString } : {};
 }
 
-export async function fetchNotesServer(search?: string, page?: number, tag?: string): Promise<any> {
+export async function fetchNotesServer(
+  search?: string, 
+  page?: number, 
+  tag?: string
+): Promise<ApiResponse> {
   const headers = await getAuthHeaders();
-  const { data } = await api.get('/notes', {
+  const { data } = await api.get<ApiResponse>('/notes', {
     headers,
     params: {
       search: search || undefined,
