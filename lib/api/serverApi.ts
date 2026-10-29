@@ -1,11 +1,9 @@
 import { cookies } from 'next/headers';
-import axios from 'axios';
+import { api } from '@/app/api/api'; 
+import type { Note } from '@/types/note'; 
+import type { User } from '@/types/user'; 
 
-const serverApiInstance = axios.create({
-  baseURL: 'https://goit.global',
-});
-
-serverApiInstance.interceptors.request.use(async (config) => {
+api.interceptors.request.use(async (config) => {
   const cookieStore = await cookies();
   const allCookies = cookieStore.getAll();
   const cookieString = allCookies.map(c => `${c.name}=${c.value}`).join('; ');
@@ -17,22 +15,26 @@ serverApiInstance.interceptors.request.use(async (config) => {
   return config;
 });
 
-export async function fetchNotesServer() {
-  const { data } = await serverApiInstance.get('/notes');
+
+export async function fetchNotesServer(): Promise<Note[]> {
+  const { data } = await api.get<Note[]>('/notes');
   return data;
 }
 
-export async function fetchNoteByIdServer(id: string) {
-  const { data } = await serverApiInstance.get(`/notes/${id}`);
+
+export async function fetchNoteByIdServer(id: string): Promise<Note> {
+  const { data } = await api.get<Note>(`/notes/${id}`);
   return data;
 }
 
-export async function getMeServer() {
-  const { data } = await serverApiInstance.get('/users/me');
+
+export async function getMeServer(): Promise<User> {
+  const { data } = await api.get<User>('/users/me');
   return data;
 }
+
 
 export async function checkSessionServer() {
-  const response = await serverApiInstance.get('/auth/session');
+  const response = await api.get('/auth/session');
   return response;
 }

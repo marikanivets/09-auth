@@ -17,11 +17,10 @@ export default function SignUpPage() {
 
     const formData = new FormData(e.currentTarget);
     const email = formData.get('email') as string;
-    const username = formData.get('username') as string;
     const password = formData.get('password') as string;
 
     try {
-      await register({ email, username, password });
+      await register({ email, password } as any);
       
       const sessionData = await login({ email, password });
       
@@ -38,11 +37,6 @@ export default function SignUpPage() {
       <form onSubmit={handleSubmit} className={css.form}>
         <h1 className={css.formTitle}>Sign up</h1>
         
-        <div className={css.formGroup}>
-          <label htmlFor="username">Username</label>
-          <input id="username" type="text" name="username" className={css.input} required />
-        </div>
-
         <div className={css.formGroup}>
           <label htmlFor="email">Email</label>
           <input id="email" type="email" name="email" className={css.input} required />

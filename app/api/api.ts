@@ -9,7 +9,8 @@ export interface ApiResponse {
 const token = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
 export const api = axios.create({
-  baseURL: 'https://goit.study',
+  baseURL: 'https://notehub-api.goit.study', 
+  withCredentials: true,                    
   headers: {
     Authorization: `Bearer ${token}`,
   },

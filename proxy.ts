@@ -11,8 +11,12 @@ export async function proxy(request: NextRequest) {
   const accessToken = cookieStore.get("accessToken")?.value;
   const refreshToken = cookieStore.get("refreshToken")?.value;
 
-  const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
-  const isPrivateRoute = privateRoutes.some((route) => pathname.startsWith(route));
+  const isPublicRoute = publicRoutes.some((route) => 
+    pathname === route || pathname.startsWith(`${route}/`)
+  );
+  const isPrivateRoute = privateRoutes.some((route) => 
+    pathname === route || pathname.startsWith(`${route}/`)
+  );
 
   if (!accessToken && refreshToken) {
     try {
@@ -25,21 +29,27 @@ export async function proxy(request: NextRequest) {
         nextResponse = NextResponse.next();
       }
 
-      let setCookieHeaders: string | string[] | undefined;
+      const rawHeaders = response.headers as any;
+      let setCookieHeaders: string | string[] | null = null;
 
-      const headers = response.headers as any;
-      if (headers && typeof headers.getSetCookie === 'function') {
-        setCookieHeaders = headers.getSetCookie();
-      } else if (response.headers) {
-        setCookieHeaders = response.headers['set-cookie'] as string | string[] | undefined;
+      if (rawHeaders) {
+        if (typeof rawHeaders.getSetCookie === 'function') {
+          setCookieHeaders = rawHeaders.getSetCookie();
+        } else if (typeof rawHeaders.get === 'function') {
+          setCookieHeaders = rawHeaders.get('set-cookie');
+        } else if (rawHeaders['set-cookie']) {
+          setCookieHeaders = rawHeaders['set-cookie'];
+        }
       }
       
-      if (setCookieHeaders && Array.isArray(setCookieHeaders)) {
-        setCookieHeaders.forEach((cookieStr) => {
-          nextResponse.headers.append('set-cookie', cookieStr);
-        });
-      } else if (typeof setCookieHeaders === 'string') {
-        nextResponse.headers.append('set-cookie', setCookieHeaders);
+      if (setCookieHeaders) {
+        if (Array.isArray(setCookieHeaders)) {
+          setCookieHeaders.forEach((cookieStr) => {
+            nextResponse.headers.append('set-cookie', cookieStr);
+          });
+        } else {
+          nextResponse.headers.append('set-cookie', String(setCookieHeaders));
+        }
       }
 
       return nextResponse;
