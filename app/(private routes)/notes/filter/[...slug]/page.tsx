@@ -7,7 +7,6 @@ import NotesClient from "./Notes.client";
 import { Metadata } from "next";
 import { fetchNotesServer } from "@/lib/api/serverApi";
 
-// Строго описываем тип пропсов страницы по стандартам Next.js 15+
 type Props = {
   params: Promise<{ slug: string[] }>;
 };
@@ -44,10 +43,8 @@ export default async function Notes({ params }: Props) {
   const queryClient = new QueryClient();
   const { slug } = await params;
   
-  // Извлекаем тег/категорию
   const category = slug && slug[0] ? decodeURIComponent(slug[0]) : "all";
 
-  // Предварительно загружаем данные на сервере через правильную функцию
   await queryClient.prefetchQuery({
     queryKey: ["notes", "", 1, category],
     queryFn: () => fetchNotesServer(),
@@ -55,7 +52,7 @@ export default async function Notes({ params }: Props) {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      {/* Передаем строго tag, как требует интерфейс вашего NotesClient */}
+      {}
       <NotesClient tag={category} />
     </HydrationBoundary>
   );
