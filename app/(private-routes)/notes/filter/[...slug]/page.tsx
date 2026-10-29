@@ -1,4 +1,4 @@
-// app/notes/filter/[...slug]/page.tsx
+export const dynamic = 'force-dynamic';
 import { fetchNotes } from '@/lib/api';
 import {
   dehydrate,
