@@ -8,7 +8,7 @@ export interface ApiResponse {
 
 const token = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: 'https://goit.study',
   headers: {
     Authorization: `Bearer ${token}`,

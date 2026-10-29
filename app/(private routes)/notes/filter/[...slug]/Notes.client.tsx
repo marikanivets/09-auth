@@ -2,7 +2,7 @@
 
 import SearchBox from '@/components/SearchBox/SearchBox';
 import css from './NotesPage.module.css';
-import { fetchNotes } from '@/lib/api';
+import { fetchNotes } from '@/app/api/api';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useEffect, useState, useRef } from 'react';
 import toast, { Toaster } from 'react-hot-toast';

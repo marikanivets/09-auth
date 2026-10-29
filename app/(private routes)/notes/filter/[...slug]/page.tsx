@@ -1,5 +1,5 @@
 export const dynamic = 'force-dynamic';
-import { fetchNotes } from '@/lib/api';
+import { fetchNotes } from '@/app/api/api';
 import {
   dehydrate,
   HydrationBoundary,

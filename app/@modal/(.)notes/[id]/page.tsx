@@ -1,4 +1,4 @@
-import { fetchNoteById } from '@/lib/api';
+import { fetchNoteById } from '@/app/api/api';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import NoteDetailsClient from '@/app/(private routes)/notes/[id]/NoteDetails.client';
 import Modal from '@/components/Modal/Modal';
