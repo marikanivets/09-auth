@@ -47,7 +47,7 @@ export default async function Notes({ params }: Props) {
 
   await queryClient.prefetchQuery({
     queryKey: ["notes", "", 1, category],
-    queryFn: () => fetchNotesServer(),
+    queryFn: () => fetchNotesServer(undefined, undefined, category),
   });
 
   return (
@@ -56,5 +56,6 @@ export default async function Notes({ params }: Props) {
     </HydrationBoundary>
   );
 }
+
 
 

@@ -30,26 +30,16 @@ export async function proxy(request: NextRequest) {
       }
 
       const rawHeaders = response.headers as any;
-      let setCookieHeaders: string | string[] | null = null;
+      const setCookieHeader = rawHeaders && typeof rawHeaders.get === 'function' 
+        ? rawHeaders.get('set-cookie') 
+        : null;
 
-      if (rawHeaders) {
-        if (typeof rawHeaders.getSetCookie === 'function') {
-          setCookieHeaders = rawHeaders.getSetCookie();
-        } else if (typeof rawHeaders.get === 'function') {
-          setCookieHeaders = rawHeaders.get('set-cookie');
-        } else if (rawHeaders['set-cookie']) {
-          setCookieHeaders = rawHeaders['set-cookie'];
-        }
-      }
-      
-      if (setCookieHeaders) {
-        if (Array.isArray(setCookieHeaders)) {
-          setCookieHeaders.forEach((cookieStr) => {
-            nextResponse.headers.append('set-cookie', cookieStr);
-          });
-        } else {
-          nextResponse.headers.append('set-cookie', String(setCookieHeaders));
-        }
+      if (setCookieHeader) {
+        const cookiesArray = setCookieHeader.split(/,(?=\s*[a-zA-Z0-9_]+=\s*)/);
+        
+        cookiesArray.forEach((cookieStr: string) => {
+          nextResponse.headers.append('set-cookie', cookieStr.trim());
+        });
       }
 
       return nextResponse;

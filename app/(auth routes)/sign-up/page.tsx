@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { register, login } from '@/lib/api/clientApi';
+import { register } from '@/lib/api/clientApi'; 
 import { useAuthStore } from '@/lib/store/authStore';
 import css from './SignUpPage.module.css';
 
@@ -20,9 +20,7 @@ export default function SignUpPage() {
     const password = formData.get('password') as string;
 
     try {
-      await register({ email, password } as any);
-      
-      const sessionData = await login({ email, password });
+      const sessionData = await register({ email, password } as any);
       
       setUser(sessionData.user);
       

@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getMeServer } from '@/lib/api/serverApi'; 
+import { getMeServer } from '@/lib/api/serverApi';
 
 export const metadata: Metadata = {
   title: 'Профіль користувача',
+  description: 'Особистий кабінет користувача додатка NoteHub з можливістю перегляду та редагування інформації.',
 };
 
 export default async function ProfilePage() {
@@ -12,7 +13,6 @@ export default async function ProfilePage() {
 
   return (
     <div>
-      {}
       {user.avatar && (
         <Image 
           src={user.avatar} 
@@ -22,13 +22,11 @@ export default async function ProfilePage() {
           priority
         />
       )}
-      
-      {}
       <h1>{user.username}</h1>
       <p>{user.email}</p>
       
-      {}
       <Link href="/profile/edit">Редагувати профіль</Link>
     </div>
   );
 }
+
