@@ -22,8 +22,11 @@ export default function SignUpPage() {
 
     try {
       await register({ email, username, password });
+      
       const sessionData = await login({ email, password });
-      setUser(sessionData);
+      
+      setUser(sessionData.user);
+      
       router.push('/profile');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Registration failed');
@@ -32,8 +35,9 @@ export default function SignUpPage() {
 
   return (
     <main className={css.mainContent}>
-      <h1 className={css.formTitle}>Sign up</h1>
       <form onSubmit={handleSubmit} className={css.form}>
+        <h1 className={css.formTitle}>Sign up</h1>
+        
         <div className={css.formGroup}>
           <label htmlFor="username">Username</label>
           <input id="username" type="text" name="username" className={css.input} required />

@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getMeServer } from '@/lib/api/serverApi';
@@ -10,14 +9,11 @@ export const metadata: Metadata = {
 };
 
 export default async function ProfilePage() {
-  const cookieStore = await cookies();
-  const cookiesHeader = cookieStore.toString();
-
   let user = { username: 'User', email: '', avatar: '' };
+  
   try {
-    user = await getMeServer(cookiesHeader);
+    user = await getMeServer();
   } catch (error) {
-    // Ошибка обработается или перенаправится редиректом
   }
 
   return (
@@ -32,7 +28,7 @@ export default async function ProfilePage() {
         
         <div className={css.avatarWrapper}>
           <Image
-            src={user.avatar || 'https://goit.global'}
+            src={user.avatar || 'https://ac.goit.global'}
             alt="User Avatar"
             width={1200}
             height={1200}

@@ -12,7 +12,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     const initAuth = async () => {
       try {
         const sessionData = await checkSession();
-        setUser(sessionData);
+        
+        setUser(sessionData.user);
       } catch (error) {
         clearIsAuthenticated();
       } finally {

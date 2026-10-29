@@ -21,15 +21,23 @@ export async function proxy(request: NextRequest) {
   if (!accessToken) {
     if (refreshToken) {
       try {
-        const data = await checkSessionServer(cookieStore.toString());
+        const response = await checkSessionServer();
         
+        let nextResponse = NextResponse.next();
         if (isPublicRoute) {
-          return NextResponse.redirect(new URL("/", request.url));
+          nextResponse = NextResponse.redirect(new URL("/", request.url));
+        } else if (isPrivateRoute) {
+          nextResponse = NextResponse.next();
         }
 
-        if (isPrivateRoute) {
-          return NextResponse.next();
+        const setCookieHeader = response.headers['set-cookie'];
+        if (setCookieHeader) {
+          setCookieHeader.forEach((cookieStr) => {
+            nextResponse.headers.append('set-cookie', cookieStr);
+          });
         }
+
+        return nextResponse;
       } catch (error) {
         if (isPrivateRoute) {
           return NextResponse.redirect(new URL("/sign-in", request.url));
@@ -58,3 +66,4 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: ["/profile/:path*", "/notes/:path*", "/sign-in", "/sign-up"],
 };
+

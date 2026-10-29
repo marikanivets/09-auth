@@ -1,67 +1,58 @@
-export const dynamic = 'force-dynamic';
-import { fetchNotes } from '@/app/api/api';
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
-} from '@tanstack/react-query';
-import NotesClient from './Notes.client';
-import { Metadata } from 'next';
+} from "@tanstack/react-query";
+import NotesClient from "./Notes.client";
+import { Metadata } from "next";
+import { fetchNotesServer } from "@/lib/api/serverApi";
 
 type Props = {
   params: Promise<{ slug: string[] }>;
 };
 
-const BASE_URL = 'https://vercel.app';
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  
-  const note = slug && slug.length > 0 ? slug[0] : 'all';
-
-  const formattedTitle = `Notes - ${note.charAt(0).toUpperCase() + note.slice(1)}`;
-  
-  const pageUrl = `${BASE_URL}/notes/filter/${note}`;
-  const ogImageUrl = `${pageUrl}/og-image.png`;
+  const note = slug && slug[0] ? decodeURIComponent(slug[0]) : "all";
 
   return {
-    title: formattedTitle,
-    description: `Browse notes tagged with ${note}. NoteHub allows you to filter and view notes based on specific tags.`,
+    title: `Notes - ${note}`,
+    description: `Browse notes tagged with ${note}. Notehab allows you to filter and view notes based on specific tags`,
     openGraph: {
-      title: formattedTitle,
-      description: `Browse notes tagged with ${note}. NoteHub allows you to filter and view notes based on specific tags.`,
-      url: pageUrl,
+      title: `Notes - ${note}`,
+      description: `Browse notes tagged with ${note}. Notehab allows you to filter and view notes based on specific tags`,
+      url: `https://notehub.com{note}`,
       images: [
         {
-          url: ogImageUrl,
+          url: "https://goit.global",
           width: 1200,
           height: 630,
-          alt: `Notes tagged with ${note} | NoteHub`,
+          alt: `Notes ${note} | NoteHub`,
         },
       ],
     },
     twitter: {
-      title: formattedTitle,
-      description: `Browse notes tagged with ${note}. NoteHub allows you to filter and view notes based on specific tags.`,
-      images: [ogImageUrl], 
+      title: `Notes - ${note}`,
+      description: `Browse notes tagged with ${note}. Notehab allows you to filter and view notes based on specific tags`,
+      images: ["https://goit.global"],
     },
   };
 }
 
-export default async function FilterPage({ params }: Props) {
+export default async function Notes({ params }: Props) {
   const queryClient = new QueryClient();
   const { slug } = await params;
   
-  const category = slug && slug.length > 0 ? slug[0] : '';
+  const category = slug && slug[0] ? decodeURIComponent(slug[0]) : "all";
 
   await queryClient.prefetchQuery({
-    queryKey: ['notes', '', 1, category],
-    queryFn: () => fetchNotes('', 1, category),
+    queryKey: ["notes", "", 1, category],
+    queryFn: () => fetchNotesServer(),
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      {}
+      {/* ПЕРЕДАЕМ СТРОГО ТОЛЬКО ТЕГ: Это убирает и ошибку TS2741, и ошибку TS2322! */}
       <NotesClient tag={category} />
     </HydrationBoundary>
   );
