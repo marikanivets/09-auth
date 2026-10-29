@@ -2,7 +2,7 @@
 
 import SearchBox from '@/components/SearchBox/SearchBox';
 import css from './NotesPage.module.css';
-import { fetchNotes } from '@/app/api/api';
+import { fetchNotes } from '@/lib/api/clientApi';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useEffect, useState, useRef } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
@@ -45,8 +45,7 @@ const NotesClient = ({ tag }: NotesClientProps) => {
     setPage(1);
   }, 300);
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const nextValue = event.target.value;
+  const handleSearchChange = (nextValue: string) => {
     setSearchInput(nextValue);
     updateSearchQuery(nextValue);
   };
@@ -67,8 +66,8 @@ const NotesClient = ({ tag }: NotesClientProps) => {
     <>
       <div className={css.app}>
         <header className={css.toolbar}>
-          <SearchBox onChange={setSearchInput} value={searchInput} />
-
+          {}
+          <SearchBox onChange={handleSearchChange} value={searchInput} />
 
           {totalPages > 1 && (
             <Pagination
@@ -102,4 +101,3 @@ const NotesClient = ({ tag }: NotesClientProps) => {
 };
 
 export default NotesClient;
-

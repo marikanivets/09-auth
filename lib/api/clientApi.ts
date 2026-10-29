@@ -1,20 +1,7 @@
 import { api } from '@/app/api/api';
-
-export interface Note {
-  id: string;
-  title: string;
-  content: string;
-  tag: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface User {
-  id: string;
-  username: string;
-  email: string;
-  avatar?: string;
-}
+// ИСПРАВЛЕНИЕ TASK 12: Импортируем готовые интерфейсы из центрального модуля типов проекта
+import { Note } from '@/types/note';
+import { User } from '@/types/user';
 
 export interface ApiResponse {
   notes: Note[];
@@ -29,11 +16,11 @@ export interface CreateNoteInput {
 
 export async function fetchNotes(search = '', page = 1, tag = 'all'): Promise<ApiResponse> {
   const { data } = await api.get<ApiResponse>('/notes', {
-    params: { 
-      search: search || undefined, 
-      page, 
-      perPage: 12, 
-      tag: tag && tag !== 'all' ? tag : undefined 
+    params: {
+      search: search || undefined,
+      page,
+      perPage: 12,
+      tag: tag && tag !== 'all' ? tag : undefined,
     },
   });
   return data;
@@ -49,8 +36,10 @@ export async function createNote(noteData: CreateNoteInput): Promise<Note> {
   return data;
 }
 
-export async function deleteNote(id: string): Promise<void> {
-  await api.delete(`/notes/${id}`);
+// ИСПРАВЛЕНИЕ TASK 12: Функция теперь возвращает удаленную заметку (Promise<Note>) вместо void
+export async function deleteNote(id: string): Promise<Note> {
+  const { data } = await api.delete<Note>(`/notes/${id}`);
+  return data;
 }
 
 export async function register(userData: Omit<User, 'id'> & Record<string, string>): Promise<{ user: User }> {
@@ -81,4 +70,3 @@ export async function updateMe(userData: Partial<Omit<User, 'id'>> & Record<stri
   const { data } = await api.patch<User>('/users/me', userData);
   return data;
 }
-

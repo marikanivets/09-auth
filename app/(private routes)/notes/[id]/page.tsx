@@ -1,5 +1,4 @@
-// app/notes/[id]/page.tsx
-import { fetchNoteById } from '@/app/api/api';
+import { fetchNoteByIdServer } from '@/lib/api/serverApi';
 import {
   dehydrate,
   HydrationBoundary,
@@ -16,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   
   try {
-    const note = await fetchNoteById(id);
+    const note = await fetchNoteByIdServer(id);
 
     const title = note?.title ? `Notes - ${note.title}` : 'Note Details | NoteHub';
     const description = note?.content ? `${note.content.slice(0, 150)}...` : 'View note details.';
@@ -60,10 +59,9 @@ const NoteDetails = async ({ params }: Props) => {
 
   const queryClient = new QueryClient();
 
-  // Безопасный prefetch на сервере
   await queryClient.prefetchQuery({
     queryKey: ['note', id],
-    queryFn: () => fetchNoteById(id),
+    queryFn: () => fetchNoteByIdServer(id),
   });
 
   return (

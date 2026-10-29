@@ -1,7 +1,7 @@
 'use client';
 
 import css from './NoteDetails.module.css';
-import { fetchNoteById } from '@/app/api/api';
+import { fetchNoteById } from '@/lib/api/clientApi';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 
