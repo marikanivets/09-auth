@@ -1,6 +1,6 @@
 import { fetchNoteById } from '@/lib/api';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import NoteDetailsClient from '@/app/(private routes)/notes/[id]/NoteDetails.client';
+import NoteDetailsClient from '@/app/(private)/notes/[id]/NoteDetails.client';
 import Modal from '@/components/Modal/Modal';
 
 type Props = {
