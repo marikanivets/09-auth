@@ -69,7 +69,7 @@ export default function App() {
 
         {isModalOpen && (
           <Modal isOpen={isModalOpen} onClose={closeModal}>
-            <NoteForm onClose={closeModal} />
+            <NoteForm />
           </Modal>
         )}
 

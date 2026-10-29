@@ -11,8 +11,11 @@ import Pagination from '@/components/Pagination/Pagination';
 import Loader from '@/components/Loader/Loader';
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage';
 import NoteList from '@/components/NoteList/NoteList';
-import { NotesClientProps } from '@/types/note';
 import Link from 'next/link';
+
+interface NotesClientProps {
+  tag: string;
+}
 
 const NotesClient = ({ tag }: NotesClientProps) => {
   const [searchInput, setSearchInput] = useState('');
@@ -30,7 +33,7 @@ const NotesClient = ({ tag }: NotesClientProps) => {
 
   const { data, isFetching, isError } = useQuery({
     queryKey: ['notes', searchQuery, page, tag],
-    queryFn: () => fetchNotes({ search: searchQuery, page, tag }),
+    queryFn: () => fetchNotes(searchQuery, page, tag),
     placeholderData: keepPreviousData,
   });
 
@@ -64,12 +67,14 @@ const NotesClient = ({ tag }: NotesClientProps) => {
     <>
       <div className={css.app}>
         <header className={css.toolbar}>
-          <SearchBox onSearch={handleSearchChange} value={searchInput} />
+          <SearchBox onChange={setSearchInput} value={searchInput} />
+
+
           {totalPages > 1 && (
             <Pagination
-              totalPages={totalPages}
-              page={page}
-              onPageChange={newPage => setPage(newPage)}
+             totalPages={totalPages}
+             currentPage={page}
+             onPageChange={(newPage) => setPage(newPage)}
             />
           )}
 
