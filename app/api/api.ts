@@ -1,8 +1,6 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "https://goit.study",
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "https://goit.global", 
   withCredentials: true,
 });
-
-
